@@ -8,7 +8,7 @@ var OpenCVbasePath = './OpenCV';
 /* GET home page. */
 router.route("/uploadOpenCVPhoto").post(function(req,res){
     // 跨域
-    console.log("收到请求");
+    console.log("收到图片");
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
@@ -38,7 +38,6 @@ router.route("/uploadOpenCVPhoto").post(function(req,res){
 router.route("/downloadOpenCVResultText").get(function(req,res){    // 获取OpenCV结果文字
     
     // 跨域
-    console.log("收到请求");
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
