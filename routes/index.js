@@ -5,8 +5,12 @@ var fs = require("fs");
 var multiparty = require('multiparty');
 var OpenCV=require('./opencv');
 var OpenCVbasePath = './OpenCV';
+var OCR=require('./ocr');
+var OCRbasePath = './OCR';
 /* GET home page. */
-router.route("/uploadOpenCVPhoto").post(function(req,res){
+
+/* OpenCV部分 */
+router.route("/uploadOpenCVPhoto").post(function(req,res){  //上传需要OpenCV的图片
     // 跨域
     console.log("收到图片");
     res.header("Access-Control-Allow-Origin", "*");
@@ -73,6 +77,57 @@ router.route("/downloadOpenCVResultImg").get(function(req,res){    // 获取Open
             console.log("传出result.jpg: ");
             res.writeHead(200,  {'Content-Type':'image/jpeg'});
             res.write(file,'binary');
+            res.end();
+        }
+    });
+});
+
+/* OCR部分 */
+router.route("/uploadOCRPhoto").post(function(req,res){  //上传需要OCR的图片
+    // 跨域
+    console.log("收到图片及语言参数");
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+    var form = new multiparty.Form();
+    //var form = new formidable.IncomingForm();
+    form.encoding = 'utf-8'; // 编码
+    form.keepExtensions = true; // 保留扩展名
+    form.maxFieldsSize = 2 * 1024 * 1024; // 文件大小
+    form.uploadDir = OCRbasePath  // 存储路径
+
+    form.parse(req,function(err,fileds,files){ // 解析 formData数据
+        // console.log(fileds.language[0]);
+        // console.log(files);
+        if(err){ return console.log(err) }
+
+        var nameArray = files.file[0].originalFilename.split('.');
+        var imgType = nameArray[nameArray.length - 1];
+
+        var imgPath = files.file[0].path // 获取文件存储路径
+        var new_imgPath=form.uploadDir+'/target.'+imgType;
+        fs.renameSync(imgPath,new_imgPath); //把图片名字改为target
+
+        OCR('target.'+imgType,fileds.language[0]); //把图片路径给OCR模块
+        //res.json({code:1})
+    });
+});
+router.route("/downloadOCRResultText").get(function(req,res){    // 获取OCR结果文字
+    
+    // 跨域
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+    
+    textPath = OCRbasePath + "/result.txt";
+    fs.readFile(textPath,'utf-8',function(err, data){
+        if (err) {
+            console.log(err);
+            return;
+        } else{
+            console.log("传出result.txt");
+            res.writeHead(200, {'Content-Type':'text/plain'});
+            res.write(data);
             res.end();
         }
     });

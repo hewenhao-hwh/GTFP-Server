@@ -1,0 +1,13 @@
+Microsoft Viual C++ Runtime Ubrary
+
+Debug Error
+
+ 
+
+Program:
+ENiwh workspace|GraduationProjecttestw64\Debug testexe
+
+sbort0 has been caled
+
+(Press Retr to debug the application)
+
