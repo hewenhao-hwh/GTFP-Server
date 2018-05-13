@@ -25,6 +25,7 @@ router.route("/uploadOpenCVPhoto").post(function(req,res){  //上传需要OpenCV
     form.uploadDir = OpenCVbasePath  // 存储路径
 
     form.parse(req,function(err,fileds,files){ // 解析 formData数据
+        // console.log(fileds.language[0]);
         //console.log(files);
         if(err){ return console.log(err) }
 
@@ -35,7 +36,7 @@ router.route("/uploadOpenCVPhoto").post(function(req,res){  //上传需要OpenCV
         var new_imgPath=form.uploadDir+'/target.'+imgType;
         fs.renameSync(imgPath,new_imgPath); //把图片名字改为target
 
-        OpenCV('target.'+imgType); //把图片路径给OpenCV模块
+        OpenCV('target.'+imgType,fileds.language[0]); //把图片路径给OpenCV模块
         //res.json({code:1})
     });
 });
